@@ -1,0 +1,79 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #b2bbbe;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+body {
+  width: 300px;
+  background-color: #eceff7;
+}
+
+#app {
+  padding: 5px 10px 10px;
+}
+
+.title {
+  text-align: center;
+}
+
+.box .search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  border: 1px solid rgb(210, 210, 210);
+  border-radius: 10px;
+  background-color: #ffff;
+}
+
+.box .search .search-ipt {
+  width: 220px;
+  height: 38px;
+  border: none;
+}
+
+.box .search .search-ipt:focus-visible {
+  outline: none;
+}
+
+.box .search .search-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  color: #ffff;
+  background-color: #c5c5c5;
+}
+
+.box .search .search-btn:hover {
+  background-color: #bbbbbb;
+}
+
+/* message list */
+
+.box .message-list {
+  margin-top: 10px;
+  max-height: 390px;
+  overflow-y: scroll;
+  word-wrap: break-word;
+}
+
+.box .message-list .item {
+  margin: 12px 0;
+  padding: 6px;
+  border-radius: 6px;
+  background-color: #ffff;
+}

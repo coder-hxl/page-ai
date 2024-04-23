@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Page AI",
+  "description": "页面 AI",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "assets/logo.png"
+  },
+  "host_permissions": ["https://*/"]
+}
