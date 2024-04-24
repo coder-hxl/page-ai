@@ -4,8 +4,16 @@
   "description": "页面 AI",
   "version": "1.0",
   "action": {
+    "default_title": "Page AI",
     "default_popup": "popup/popup.html",
     "default_icon": "assets/logo.png"
   },
-  "host_permissions": ["https://*/"]
+  "host_permissions": ["<all_urls>"],
+  "permissions": ["activeTab", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content.js"]
+    }
+  ]
 }

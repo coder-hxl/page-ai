@@ -1,34 +1,38 @@
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>页面 AI</title>
-    <link rel="stylesheet" href="./popup.css" />
-  </head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="./popup.css" />
 
-  <body>
-    <div id="app">
-      <h1 class="title">页面 AI</h1>
+<div id="app">
+  <h1 class="title">页面 AI</h1>
 
-      <div class="box">
-        <div class="search">
-          <input type="text" class="search-ipt" placeholder="" />
-          <button class="search-btn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M7 11L12 6L17 11M12 18V7"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></path>
-            </svg>
-          </button>
-        </div>
+  <div class="config">
+    <div class="item">
+      <span>Base URL</span>
+      <input type="text" class="config-ipt" data-name="BASE_URL" />
+    </div>
+    <div class="item">
+      <span>API Key</span>
+      <input type="password" class="config-ipt" data-name="API_KEY" />
+    </div>
+  </div>
 
-        <div class="message-list"></div>
-      </div>
+  <div class="box">
+    <div class="search">
+      <input type="text" class="search-ipt" placeholder="" />
+      <button class="search-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M7 11L12 6L17 11M12 18V7"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </button>
     </div>
 
-    <script src="./popup.js"></script>
-  </body>
-</html>
+    <div class="message-list"></div>
+  </div>
+</div>
+
+<script src="./popup.js"></script>

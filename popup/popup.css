@@ -21,12 +21,41 @@ body {
   background-color: #eceff7;
 }
 
+input {
+  border: 1px solid rgb(210, 210, 210);
+}
+
+input:focus-visible {
+  outline: none;
+}
+
 #app {
   padding: 5px 10px 10px;
 }
 
 .title {
   text-align: center;
+}
+
+.config {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #cecece;
+}
+
+.config .item {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 10px;
+}
+
+.config .item span {
+  width: 60px;
+}
+
+.config .item .config-ipt {
+  flex: 1;
+  border-radius: 5px;
 }
 
 .box .search {
