@@ -19,7 +19,6 @@
 
 body {
   width: 330px;
-  background-color: #eceff7;
 }
 
 input {
@@ -105,7 +104,6 @@ input:focus-visible {
   margin-top: 10px;
   border: 1px solid #cacaca;
   border-radius: 10px;
-  background-color: #ffff;
 }
 
 .box .search .search-ipt {
@@ -143,8 +141,8 @@ input:focus-visible {
 
 .box .message-list .item {
   margin: 12px 0;
-  padding: 6px;
+  padding: 6px 6px 20px;
   min-height: 30px;
   border-radius: 6px;
-  background-color: #ffff;
+  border-bottom: 1px solid #dcdcdc;
 }
