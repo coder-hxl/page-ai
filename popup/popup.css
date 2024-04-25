@@ -1,6 +1,7 @@
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 *::-webkit-scrollbar {
@@ -17,12 +18,12 @@
 }
 
 body {
-  width: 300px;
+  width: 330px;
   background-color: #eceff7;
 }
 
 input {
-  border: 1px solid rgb(210, 210, 210);
+  border: 1px solid #cacaca;
 }
 
 input:focus-visible {
@@ -33,37 +34,76 @@ input:focus-visible {
   padding: 5px 10px 10px;
 }
 
+.partition {
+  margin: 12px 0;
+  height: 1px;
+  background-color: #cecece;
+}
+
 .title {
   text-align: center;
 }
 
+/* config */
+
 .config {
-  margin-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #cecece;
+  padding: 0 2px;
 }
 
-.config .item {
+/* config writes */
+
+.config .writes .item {
   display: flex;
   justify-content: space-between;
-  padding: 3px 10px;
+  align-items: center;
+  height: 26px;
+  padding: 3px 0;
 }
 
-.config .item span {
-  width: 60px;
+.config .writes .item span {
+  width: 55px;
+  text-align: justify;
+  text-align-last: justify;
 }
 
-.config .item .config-ipt {
+.config .writes .item .config-input {
   flex: 1;
+  height: 100%;
+  margin-left: 5px;
+  padding-left: 5px;
   border-radius: 5px;
+}
+
+/* config options */
+
+.config .options {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.config .options .options-label {
+  display: flex;
+  align-items: center;
+  height: 20px;
+}
+
+.config .options .options-label .config-checkbox {
+  margin-right: 8px;
+}
+
+/* box */
+
+.box {
+  min-height: 300px;
 }
 
 .box .search {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   margin-top: 10px;
-  border: 1px solid rgb(210, 210, 210);
+  border: 1px solid #cacaca;
   border-radius: 10px;
   background-color: #ffff;
 }
@@ -84,18 +124,19 @@ input:focus-visible {
   border: none;
   border-radius: 5px;
   color: #ffff;
-  background-color: #c5c5c5;
+  background-color: #000;
+
 }
 
-.box .search .search-btn:hover {
-  background-color: #bbbbbb;
+.box .search .search-btn[disabled] {
+  background-color: #c5c5c5;
 }
 
 /* message list */
 
 .box .message-list {
   margin-top: 10px;
-  max-height: 390px;
+  max-height: 350px;
   overflow-y: scroll;
   word-wrap: break-word;
 }
@@ -103,6 +144,7 @@ input:focus-visible {
 .box .message-list .item {
   margin: 12px 0;
   padding: 6px;
+  min-height: 30px;
   border-radius: 6px;
   background-color: #ffff;
 }

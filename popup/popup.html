@@ -2,23 +2,44 @@
 <link rel="stylesheet" href="./popup.css" />
 
 <div id="app">
-  <h1 class="title">页面 AI</h1>
+  <h1 class="title">Page AI</h1>
+
+  <div class="partition"></div>
 
   <div class="config">
-    <div class="item">
-      <span>Base URL</span>
-      <input type="text" class="config-ipt" data-name="BASE_URL" />
+    <div class="writes">
+      <div class="item">
+        <span>Base URL</span>
+        <input type="text" class="config-input" data-name="BASE_URL" />
+      </div>
+      <div class="item">
+        <span>API Key</span>
+        <input type="password" class="config-input" data-name="API_KEY" />
+      </div>
+      <div class="item">
+        <span>模型</span>
+        <input type="text" class="config-input" data-name="MODEL" />
+      </div>
     </div>
-    <div class="item">
-      <span>API Key</span>
-      <input type="password" class="config-ipt" data-name="API_KEY" />
+
+    <div class="options">
+      <label class="options-label">
+        <input
+          class="config-checkbox"
+          type="checkbox"
+          data-name="READ_CONTEXT"
+        />
+        <span>读取页面内容</span>
+      </label>
     </div>
   </div>
+
+  <div class="partition"></div>
 
   <div class="box">
     <div class="search">
       <input type="text" class="search-ipt" placeholder="" />
-      <button class="search-btn">
+      <button class="search-btn" disabled>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
             d="M7 11L12 6L17 11M12 18V7"

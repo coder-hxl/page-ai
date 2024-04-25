@@ -1,101 +1,44 @@
-const configIpts = document.querySelectorAll('.config-ipt')
+const configInputs = document.querySelectorAll('.config-input')
+const configCheckboxs = document.querySelectorAll('.config-checkbox')
 
 const searchInput = document.querySelector('.search-ipt')
 const searchBtn = document.querySelector('.search-btn')
 const messageList = document.querySelector('.message-list')
 
-let currentTab = null
-const config = {
-  BASE_URL: '',
-  API_KEY: ''
-}
-let searchContent = ''
+const context = {
+  currentTab: null,
+  searchContent: '',
+  isReplyState: false,
+  isSearchInputEmpty: true,
 
-init()
-function init() {
-  chrome.tabs
-    .query({
-      active: true,
-      lastFocusedWindow: true
-    })
-    .then(([tab]) => (currentTab = tab))
-
-  chrome.storage.local.get(['BASE_URL', 'API_KEY']).then((res) => {
-    config.BASE_URL = res.BASE_URL ?? ''
-    config.API_KEY = res.API_KEY ?? ''
-
-    configIpts.forEach((item) => {
-      const name = item.dataset.name
-      if (name === 'BASE_URL') {
-        item.value = config.BASE_URL
-      } else {
-        item.value = config.API_KEY
-      }
-
-      item.addEventListener('change', (evnet) => {
-        const name = evnet.target.dataset.name
-        const value = evnet.target.value
-
-        chrome.storage.local.set({ [name]: value })
-      })
-    })
-  })
-
-  searchBtn.addEventListener('click', async () => {
-    searchContent = searchInput.value
-
-    chrome.tabs.sendMessage(currentTab.id, 'get body content text')
-  })
-
-  chrome.runtime.onMessage.addListener(async (bodyContentText) => {
-    const el = document.createElement('div')
-    el.setAttribute('class', 'item')
-    messageList.insertBefore(el, messageList.firstElementChild)
-
-    const reader = await fetchOpenAIStreamReader(searchContent, bodyContentText)
-    await handleStreamReaderAnswer(el, reader)
-  })
+  config: {
+    BASE_URL: '',
+    API_KEY: '',
+    READ_CONTEXT: false,
+    MODEL: ''
+  }
 }
 
-async function fetchOpenAIStreamReader(searchContent, bodyContentText) {
-  console.log('searchContent', searchContent)
-  console.log('bodyContentText', bodyContentText)
+let rawPrevChunk = ''
+function transformOpenAIChunkToArr(chunk) {
+  chunk = chunk.replace('data: [DONE]', '').trim()
 
-  const rule = `
-    你需要基于名为page text提供的内容来回答名为 clien 的问题
-
-    1.接收输入：接收名为page text的内容(body.innerText)和名为clien的问题。
-    2.预处理：对body.innerText进行文本清理、分词和词性标注。
-    3.问题分类：将clien的问题进行分类，确定其类型（如事实性、观点性等）。
-    4.上下文分析：在body.innerText中查找与问题相关的段落或句子，并分析它们的上下文信    息。
-    5.答案抽取或生成：根据问题的类型和上下文信息，抽取相关的答案片段或生成合适的回答。
-    6.返回回答：将生成的回答返回给用户。
-  `
-
-  const Options = {
-    model: 'gpt-3.5-turbo',
-    messages: [
-      { role: 'system', content: rule },
-      { role: 'user', name: 'page-text', content: bodyContentText },
-      { role: 'user', name: 'clien', content: searchContent }
-    ],
-    stream: true
+  if (!chunk) {
+    return []
+  } else if (!chunk.endsWith('}]}')) {
+    rawPrevChunk += chunk
+    return []
   }
 
-  try {
-    const response = await fetch(`${config.BASE_URL}/chat/completions`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.API_KEY}`
-      },
-      method: 'post',
-      body: JSON.stringify(Options)
-    })
+  if (rawPrevChunk) {
+    chunk = rawPrevChunk + chunk
 
-    return response.body.getReader()
-  } catch (error) {
-    console.log(`fetchOpenAIStreamReader error: ${error.message}`)
+    rawPrevChunk = ''
   }
+
+  const replaceData = chunk.replaceAll('data: ', ',').slice(1)
+
+  return JSON.parse(`[${replaceData}]`)
 }
 
 async function handleStreamReaderAnswer(el, reader) {
@@ -106,29 +49,167 @@ async function handleStreamReaderAnswer(el, reader) {
 
     // 拿到当前切片的数据
     const text = decoder.decode(value)
+    const values = transformOpenAIChunkToArr(text)
 
-    const values = handleOpenAIChunkData(text)
+    if (values.length) {
+      values.forEach((item) => {
+        const choice = item.choices[0]
 
-    values.forEach((itemText) => {
-      const item = JSON.parse(itemText)
+        if (choice.finish_reason === 'stop') return
 
-      if (item.choices[0].finish_reason === 'stop') return
-
-      console.log(item)
-      const content = item.choices[0].delta.content
-      el.innerText += content
-    })
+        const content = choice.delta.content
+        el.innerText += content
+      })
+    }
 
     return reader.read().then(pump)
   })
 }
 
-function handleOpenAIChunkData(chunk) {
-  const values = chunk
-    .split('data: ')
-    .filter((text) => text && !text.includes('DONE'))
+function createOpenAIBodyStr(searchContent, bodyContentText = '') {
+  const result = {
+    model: context.config.MODEL,
+    messages: [],
+    stream: true
+  }
 
-  console.log(values)
+  if (context.config.READ_CONTEXT) {
+    const rule = `
+      page-text用户的内容简称上下文。clien用户的内容简称问题。
 
-  return values
+      你需要根据上下文回答问题。
+
+       步骤:
+       1.处理：对上下文进行文本清理、分词和词性标注。
+       2.问题分类：将问题进行分类，确定其类型（如事实性、观点性等）。
+       3.上下文分析：在上下文中查找与问题相关的段落或句子，并分析它们的上下文信息。
+       4.答案生成：根据问题的类型和上下文信息，抽取相关的答案片段或生成合适的回答。
+       5.返回回答：将生成的回答返回给用户。
+    `
+
+    result.messages.push(
+      { role: 'system', content: rule },
+      { role: 'user', name: 'page-text', content: bodyContentText },
+      { role: 'user', name: 'clien', content: searchContent }
+    )
+  } else {
+    const rule = '你需要回答用户问题'
+
+    result.messages.push(
+      { role: 'system', content: rule },
+      { role: 'user', content: searchContent }
+    )
+  }
+
+  return JSON.stringify(result)
 }
+
+async function fetchOpenAIStreamReader(searchContent, bodyContentText = '') {
+  try {
+    const response = await fetch(
+      `${context.config.BASE_URL}/chat/completions`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${context.config.API_KEY}`
+        },
+        method: 'post',
+        body: createOpenAIBodyStr(searchContent, bodyContentText)
+      }
+    )
+
+    return response.body.getReader()
+  } catch (error) {
+    console.log(`fetchOpenAIStreamReader error: ${error.message}`)
+  }
+}
+
+function init() {
+  chrome.tabs
+    .query({ active: true, lastFocusedWindow: true })
+    .then(([tab]) => (context.currentTab = tab))
+
+  chrome.storage.local.get(Object.keys(context.config)).then((localValues) => {
+    context.config.BASE_URL =
+      localValues.BASE_URL ?? 'https://api.openai.com/v1'
+    context.config.API_KEY = localValues.API_KEY ?? ''
+    context.config.READ_CONTEXT = localValues.READ_CONTEXT ?? false
+    context.config.MODEL = localValues.MODEL ?? 'gpt-3.5-turbo'
+
+    configInputs.forEach((el) => {
+      el.value = context.config[el.dataset.name]
+
+      el.addEventListener('change', (event) => {
+        const name = event.target.dataset.name
+        const value = event.target.value
+
+        context.config[name] = value
+        chrome.storage.local.set({ [name]: value })
+      })
+    })
+
+    configCheckboxs.forEach((el) => {
+      el.checked = context.config[el.dataset.name]
+
+      el.addEventListener('change', (event) => {
+        const name = event.target.dataset.name
+        const value = event.target.checked
+
+        context.config[name] = value
+        chrome.storage.local.set({ [name]: value })
+      })
+    })
+  })
+
+  searchInput.addEventListener('input', async (event) => {
+    context.isSearchInputEmpty = !event.target.value.trim()
+
+    if (!context.isReplyState) {
+      searchBtn.disabled = context.isSearchInputEmpty
+    }
+  })
+
+  searchBtn.addEventListener('click', async () => {
+    context.searchContent = searchInput.value
+
+    // 根据用户需要决定是否获取内容
+    if (context.config.READ_CONTEXT) {
+      chrome.tabs.sendMessage(context.currentTab.id, 'get body content text')
+    } else {
+      const el = document.createElement('div')
+      el.setAttribute('class', 'item')
+      messageList.insertBefore(el, messageList.firstElementChild)
+
+      searchBtn.disabled = context.isReplyState = true
+
+      try {
+        const reader = await fetchOpenAIStreamReader(context.searchContent)
+        await handleStreamReaderAnswer(el, reader)
+      } finally {
+        context.isReplyState = false
+        searchBtn.disabled = context.isSearchInputEmpty
+      }
+    }
+  })
+
+  chrome.runtime.onMessage.addListener(async (bodyContentText) => {
+    const el = document.createElement('div')
+    el.setAttribute('class', 'item')
+    messageList.insertBefore(el, messageList.firstElementChild)
+
+    searchBtn.disabled = context.isReplyState = true
+
+    try {
+      const reader = await fetchOpenAIStreamReader(
+        context.searchContent,
+        bodyContentText
+      )
+      await handleStreamReaderAnswer(el, reader)
+    } finally {
+      context.isReplyState = false
+      searchBtn.disabled = context.isSearchInputEmpty
+    }
+  })
+}
+
+init()
