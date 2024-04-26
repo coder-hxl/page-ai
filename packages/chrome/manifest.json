@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Page AI",
-  "description": "页面 AI",
+  "description": "通过 AI 解析页面内容，可以轻松获取答案，提升浏览效率",
   "version": "1.0",
   "action": {
     "default_title": "Page AI",
