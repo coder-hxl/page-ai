@@ -105,22 +105,40 @@ function createOpenAIBodyStr(searchContent, bodyContentText = '') {
 }
 
 async function fetchOpenAIStreamReader(searchContent, bodyContentText = '') {
-  try {
-    const response = await fetch(
-      `${context.config.BASE_URL}/chat/completions`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${context.config.API_KEY}`
-        },
-        method: 'post',
-        body: createOpenAIBodyStr(searchContent, bodyContentText)
-      }
-    )
+  const response = await fetch(`${context.config.BASE_URL}/chat/completions`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${context.config.API_KEY}`
+    },
+    method: 'post',
+    body: createOpenAIBodyStr(searchContent, bodyContentText)
+  })
 
-    return response.body.getReader()
+  if (!response.ok) {
+    throw new Error(`${response.status} - 网络响应不正常`)
+  }
+
+  return response.body.getReader()
+}
+
+async function handleProblem(bodyContentText = '') {
+  const el = document.createElement('div')
+  el.setAttribute('class', 'item')
+  messageList.insertBefore(el, messageList.firstElementChild)
+
+  searchBtn.disabled = context.isReplyState = true
+
+  try {
+    const reader = await fetchOpenAIStreamReader(
+      context.searchContent,
+      bodyContentText
+    )
+    await handleStreamReaderAnswer(el, reader)
   } catch (error) {
-    console.log(`fetchOpenAIStreamReader error: ${error.message}`)
+    el.innerText = `Error: ${error.message}`
+  } finally {
+    context.isReplyState = false
+    searchBtn.disabled = context.isSearchInputEmpty
   }
 }
 
@@ -171,44 +189,18 @@ function init() {
 
   searchBtn.addEventListener('click', async () => {
     context.searchContent = searchInput.value
+    searchInput.value = ''
 
     // 根据用户需要决定是否获取内容
     if (context.config.READ_CONTEXT) {
       chrome.tabs.sendMessage(context.currentTab.id, 'get body content text')
     } else {
-      const el = document.createElement('div')
-      el.setAttribute('class', 'item')
-      messageList.insertBefore(el, messageList.firstElementChild)
-
-      searchBtn.disabled = context.isReplyState = true
-
-      try {
-        const reader = await fetchOpenAIStreamReader(context.searchContent)
-        await handleStreamReaderAnswer(el, reader)
-      } finally {
-        context.isReplyState = false
-        searchBtn.disabled = context.isSearchInputEmpty
-      }
+      handleProblem()
     }
   })
 
   chrome.runtime.onMessage.addListener(async (bodyContentText) => {
-    const el = document.createElement('div')
-    el.setAttribute('class', 'item')
-    messageList.insertBefore(el, messageList.firstElementChild)
-
-    searchBtn.disabled = context.isReplyState = true
-
-    try {
-      const reader = await fetchOpenAIStreamReader(
-        context.searchContent,
-        bodyContentText
-      )
-      await handleStreamReaderAnswer(el, reader)
-    } finally {
-      context.isReplyState = false
-      searchBtn.disabled = context.isSearchInputEmpty
-    }
+    handleProblem(bodyContentText)
   })
 }
 
