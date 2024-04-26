@@ -8,9 +8,13 @@
 
 ## 示例
 
-![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example-1.png)
+在 [LICENSE](https://github.com/coder-hxl/page-ai/blob/main/LICENSE) 页使用 Page AI
 
-![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example-2.png)
+![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example1.png)
+
+在 [vuejs 存储库](https://github.com/vuejs/core) 页使用 Page AI
+
+![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example2.png)
 
 ## 安装
 
