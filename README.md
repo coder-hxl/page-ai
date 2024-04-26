@@ -1,6 +1,6 @@
 # Page AI
 
-通过 AI 分析页面内容，轻松获取用户答案的谷歌浏览器扩展程序。
+通过 AI 解析页面内容，可以轻松获取答案，提升浏览效率的谷歌浏览器扩展程序
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/interface.png" />
@@ -8,7 +8,9 @@
 
 ## 示例
 
-![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example.png)
+![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example-1.png)
+
+![](https://raw.githubusercontent.com/coder-hxl/page-ai/main/assets/example-2.png)
 
 ## 安装
 
