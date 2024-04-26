@@ -17,6 +17,11 @@
   border-radius: 10px;
 }
 
+:root {
+  --c-yellow-theme: #feba07;
+  --c-golden-yellow-theme: #f26b1f;
+}
+
 body {
   width: 330px;
 }
@@ -39,8 +44,30 @@ input:focus-visible {
   background-color: #cecece;
 }
 
-.title {
-  text-align: center;
+/* header */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+header .left {
+  display: flex;
+  align-items: center;
+}
+
+header .left .logo {
+  height: 26px;
+}
+
+header .left .title {
+  margin-left: 5px;
+  background: linear-gradient(108deg, var(--c-yellow-theme) 10%, var(--c-golden-yellow-theme));;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
 /* config */
@@ -55,12 +82,12 @@ input:focus-visible {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 26px;
-  padding: 3px 0;
+  height: 23px;
+  margin: 6px 0;
 }
 
 .config .writes .item span {
-  width: 55px;
+  width: 50px;
   text-align: justify;
   text-align-last: justify;
 }
