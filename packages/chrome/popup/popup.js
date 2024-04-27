@@ -190,6 +190,7 @@ function init() {
   searchBtn.addEventListener('click', async () => {
     context.searchContent = searchInput.value
     searchInput.value = ''
+    context.isSearchInputEmpty = true
 
     // 根据用户需要决定是否获取内容
     if (context.config.READ_CONTEXT) {
