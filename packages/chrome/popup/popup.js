@@ -1,3 +1,5 @@
+import { debounce } from '../src/utils.js'
+
 const configInputs = document.querySelectorAll('.config-input')
 const configCheckboxs = document.querySelectorAll('.config-checkbox')
 
@@ -57,7 +59,7 @@ async function handleStreamReaderAnswer(el, reader) {
 
         if (choice.finish_reason === 'stop') return
 
-        const content = choice.delta.content
+        const content = choice.delta.content ?? ''
         el.innerText += content
       })
     }
@@ -121,7 +123,7 @@ async function fetchOpenAIStreamReader(searchContent, bodyContentText = '') {
   return response.body.getReader()
 }
 
-async function handleProblem(bodyContentText = '') {
+async function replyProblem(bodyContentText = '') {
   const el = document.createElement('div')
   el.setAttribute('class', 'item')
   messageList.insertBefore(el, messageList.firstElementChild)
@@ -139,6 +141,21 @@ async function handleProblem(bodyContentText = '') {
   } finally {
     context.isReplyState = false
     searchBtn.disabled = context.isSearchInputEmpty
+  }
+}
+
+function handleProblem() {
+  if (context.isSearchInputEmpty) return
+
+  context.searchContent = searchInput.value
+  searchInput.value = ''
+  context.isSearchInputEmpty = true
+
+  // 根据用户需要决定是否获取内容
+  if (context.config.READ_CONTEXT) {
+    chrome.tabs.sendMessage(context.currentTab.id, 'get body content text')
+  } else {
+    replyProblem()
   }
 }
 
@@ -187,21 +204,19 @@ function init() {
     }
   })
 
-  searchBtn.addEventListener('click', async () => {
-    context.searchContent = searchInput.value
-    searchInput.value = ''
-    context.isSearchInputEmpty = true
+  searchInput.addEventListener(
+    'keydown',
+    debounce(async (event) => {
+      if (event.code === 'Enter') {
+        handleProblem()
+      }
+    }, 500)
+  )
 
-    // 根据用户需要决定是否获取内容
-    if (context.config.READ_CONTEXT) {
-      chrome.tabs.sendMessage(context.currentTab.id, 'get body content text')
-    } else {
-      handleProblem()
-    }
-  })
+  searchBtn.addEventListener('click', handleProblem)
 
   chrome.runtime.onMessage.addListener(async (bodyContentText) => {
-    handleProblem(bodyContentText)
+    replyProblem(bodyContentText)
   })
 }
 
