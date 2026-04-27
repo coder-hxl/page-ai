@@ -404,6 +404,42 @@ header .right {
   line-height: 1.6;
 }
 
+/* Loading Text */
+
+.loading-text {
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+/* Error Message */
+
+.error-message .message-header {
+  margin-bottom: 6px;
+}
+
+.error-role {
+  color: var(--c-danger) !important;
+  font-weight: 600;
+}
+
+.error-content {
+  background-color: rgba(220, 53, 69, 0.08) !important;
+  border: 1px solid rgba(220, 53, 69, 0.2) !important;
+}
+
+.error-title {
+  color: var(--c-danger);
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.error-detail {
+  color: var(--c-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 /* History Panel */
 
 .history-header {
