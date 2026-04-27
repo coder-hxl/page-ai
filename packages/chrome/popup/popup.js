@@ -201,6 +201,7 @@ function createOpenAIBodyStr(searchContent, bodyContentText = '') {
   }
 
   logDebug('createOpenAIBodyStr', `请求体构建完成，消息数量: ${result.messages.length}`)
+  logDebug('createOpenAIBodyStr', `消息结构: ${JSON.stringify(result.messages, null, 2)}`)
 
   return JSON.stringify(result)
 }
@@ -226,6 +227,25 @@ async function fetchOpenAIStreamReader(searchContent, bodyContentText = '') {
 
     const body = createOpenAIBodyStr(searchContent, bodyContentText)
     logDebug('fetchOpenAIStreamReader', `请求体大小: ${body.length} 字节`)
+
+    try {
+      const parsedBody = JSON.parse(body)
+      logDebug('fetchOpenAIStreamReader', `完整请求体 (model): ${parsedBody.model}`)
+      logDebug('fetchOpenAIStreamReader', `完整请求体 (stream): ${parsedBody.stream}`)
+      logDebug('fetchOpenAIStreamReader', `完整请求体 (messages 数量): ${parsedBody.messages.length}`)
+      parsedBody.messages.forEach((msg, idx) => {
+        logDebug('fetchOpenAIStreamReader', `  message[${idx}]: role=${msg.role}, name=${msg.name || '无'}, content长度=${msg.content ? msg.content.length : 0}`)
+        if (msg.content && msg.content.length < 500) {
+          logDebug('fetchOpenAIStreamReader', `  message[${idx}] content: ${msg.content}`)
+        } else if (msg.content) {
+          logDebug('fetchOpenAIStreamReader', `  message[${idx}] content 前200字符: ${msg.content.substring(0, 200)}...`)
+        }
+      })
+    } catch (e) {
+      logError('fetchOpenAIStreamReader - 解析请求体失败', e)
+    }
+
+    logDebug('fetchOpenAIStreamReader', `发送请求到: ${url}`)
 
     const response = await fetch(url, {
       headers: {
