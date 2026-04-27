@@ -30,6 +30,11 @@
     </div>
   </header>
 
+  <div class="status-bar" id="statusBar">
+    <span class="status-icon" id="statusIcon">✓</span>
+    <span class="status-text" id="statusText">就绪</span>
+  </div>
+
   <div class="partition"></div>
 
   <div class="config">
@@ -62,9 +67,49 @@
 
   <div class="partition"></div>
 
+  <div class="features">
+    <h3 class="features-title">快捷功能</h3>
+    <div class="features-grid">
+      <button class="feature-btn" data-action="copy" title="一键复制页面内容">
+        <span class="feature-icon">📋</span>
+        <span class="feature-label">一键复制</span>
+      </button>
+      <button class="feature-btn" data-action="keywords" title="提取关键词">
+        <span class="feature-icon">🔑</span>
+        <span class="feature-label">关键词</span>
+      </button>
+      <button class="feature-btn" data-action="summarize" title="文本精简">
+        <span class="feature-icon">📝</span>
+        <span class="feature-label">精简</span>
+      </button>
+      <button class="feature-btn" data-action="optimize" title="语句优化">
+        <span class="feature-icon">✨</span>
+        <span class="feature-label">优化</span>
+      </button>
+      <button class="feature-btn" data-action="correct" title="智能纠错">
+        <span class="feature-icon">🔧</span>
+        <span class="feature-label">纠错</span>
+      </button>
+      <button class="feature-btn" data-action="deduplicate" title="内容去重">
+        <span class="feature-icon">🔄</span>
+        <span class="feature-label">去重</span>
+      </button>
+      <button class="feature-btn" data-action="highlight" title="重点标注">
+        <span class="feature-icon">⭐</span>
+        <span class="feature-label">标注</span>
+      </button>
+      <button class="feature-btn" data-action="format" title="格式规整">
+        <span class="feature-icon">📐</span>
+        <span class="feature-label">格式</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="partition"></div>
+
   <div class="box">
     <div class="search">
-      <input type="text" class="search-ipt" placeholder="" />
+      <input type="text" class="search-ipt" placeholder="输入问题或指令..." />
       <button class="search-btn" disabled>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
@@ -80,6 +125,8 @@
 
     <div class="message-list"></div>
   </div>
+
+  <div class="toast" id="toast" style="display: none;"></div>
 </div>
 
 <script src="./popup.js" type="module"></script>

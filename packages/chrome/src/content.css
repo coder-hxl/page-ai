@@ -1,0 +1,71 @@
+.page-ai-highlight {
+  background-color: #feba07 !important;
+  color: #000 !important;
+  border-radius: 3px;
+  padding: 1px 3px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.page-ai-highlight:hover {
+  background-color: #f26b1f !important;
+  color: #fff !important;
+}
+
+.page-ai-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  z-index: 999999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  max-width: 300px;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+.page-ai-notification.success {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.page-ai-notification.error {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.page-ai-notification.warning {
+  background-color: #ff9800;
+  color: #fff;
+}
+
+.page-ai-notification.info {
+  background-color: #2196F3;
+  color: #fff;
+}
