@@ -8,6 +8,17 @@
       <h1 class="title">Page AI</h1>
     </div>
     <div class="right">
+      <button class="tab-btn active" data-tab="chat" title="对话">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+      <button class="tab-btn" data-tab="history" title="历史记录">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12,6 12,12 16,14"></polyline>
+        </svg>
+      </button>
       <a
         href="https://github.com/coder-hxl/page-ai"
         target="_blank"
@@ -62,23 +73,63 @@
 
   <div class="partition"></div>
 
-  <div class="box">
-    <div class="search">
-      <input type="text" class="search-ipt" placeholder="" />
-      <button class="search-btn" disabled>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M7 11L12 6L17 11M12 18V7"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </svg>
+  <div class="tab-content active" data-tab="chat">
+    <div class="feature-buttons">
+      <button class="feature-btn active" data-feature="CHAT" title="自由对话">
+        <span class="feature-icon">💬</span>
+        <span class="feature-name">对话</span>
+      </button>
+      <button class="feature-btn" data-feature="TRANSLATE" title="翻译">
+        <span class="feature-icon">🌐</span>
+        <span class="feature-name">翻译</span>
+      </button>
+      <button class="feature-btn" data-feature="CODE_EXPLAIN" title="代码解释">
+        <span class="feature-icon">💻</span>
+        <span class="feature-name">解释</span>
+      </button>
+      <button class="feature-btn" data-feature="SUMMARIZE" title="文章总结">
+        <span class="feature-icon">📝</span>
+        <span class="feature-name">总结</span>
+      </button>
+      <button class="feature-btn" data-feature="POLISH" title="段落润色">
+        <span class="feature-icon">✨</span>
+        <span class="feature-name">润色</span>
       </button>
     </div>
 
-    <div class="message-list"></div>
+    <div class="box">
+      <div class="search">
+        <input type="text" class="search-ipt" placeholder="请输入内容，选择功能后发送..." />
+        <button class="search-btn" disabled>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M7 11L12 6L17 11M12 18V7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="message-list"></div>
+    </div>
+  </div>
+
+  <div class="tab-content" data-tab="history">
+    <div class="history-header">
+      <span class="history-title">历史记录</span>
+      <button class="clear-history-btn" title="清空历史">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3,6 5,6 21,6"></polyline>
+          <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="history-list">
+      <div class="history-empty">暂无历史记录</div>
+    </div>
   </div>
 </div>
 
